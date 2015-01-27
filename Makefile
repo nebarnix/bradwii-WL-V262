@@ -51,12 +51,12 @@ all: bradwii-x4-gcc
 %.o: %.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cross ARM C Compiler'
-	arm-none-eabi-gcc -mcpu=cortex-m0 -mthumb -Os -ffunction-sections -fno-common -fno-builtin -Wall  -g -DX4_BUILD -I"/home/ajlitt/bradwii/bradwii-X4/lib-Mini51/hal" -I"/home/ajlitt/bradwii/bradwii-X4/src" -I"/home/ajlitt/bradwii/bradwii-X4/lib-Mini51/Device/Nuvoton/Mini51Series/Include" -I"/home/ajlitt/bradwii/bradwii-X4/lib-Mini51/CMSIS/Include" -I"/home/ajlitt/bradwii/bradwii-X4/lib-Mini51/StdDriver/inc" -std=gnu99 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$@" -c -o "$@" "$<"
+	arm-none-eabi-gcc -mcpu=cortex-m0 -mthumb -Os -ffunction-sections -fno-common -fno-builtin -Wall  -g -DX4_BUILD -I"lib-Mini51/hal" -I"src" -I"lib-Mini51/Device/Nuvoton/Mini51Series/Include" -I"lib-Mini51/CMSIS/Include" -I"lib-Mini51/StdDriver/inc" -std=gnu99 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$@" -c -o "$@" "$<"
 
 bradwii-x4-gcc: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: Cross ARM C Linker'
-	arm-none-eabi-gcc -mcpu=cortex-m0 -mthumb -Os -ffunction-sections -fno-common -fno-builtin -Wall  -g -T "/home/ajlitt/bradwii/bradwii-X4/lib-Mini51/linker/memory.ld" -T "/home/ajlitt/bradwii/bradwii-X4/lib-Mini51/linker/link.ld" -nostartfiles -Xlinker --gc-sections -Wl,-Map,"bradwii-x4-gcc.map" -o "bradwii-x4-gcc" $(OBJS) $(USER_OBJS) $(LIBS)
+	arm-none-eabi-gcc -mcpu=cortex-m0 -mthumb -Os -ffunction-sections -fno-common -fno-builtin -Wall  -g -T "lib-Mini51/linker/memory.ld" -T "lib-Mini51/linker/link.ld" -nostartfiles -Xlinker --gc-sections -Wl,-Map,"bradwii-x4-gcc.map" -o "bradwii-x4-gcc" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 
@@ -77,6 +77,10 @@ clean:
 	-rm -f $(SECONDARY_SIZE) $(OBJS) $(OBJS:.o=.d) $(SECONDARY_FLASH) bradwii-x4-gcc bradwii-x4-gcc.map
 	-@echo ' '
 
+# TODO: package up openocd changes
+flash: bradwii-x4-gcc
+	-openocd -f target/mini51_stlinkv2.cfg -c "init; halt; flash write_image erase bradwii-x4-gcc 0; reset; shutdown"
+
+
 .PHONY: all clean dependents
 .SECONDARY:
-

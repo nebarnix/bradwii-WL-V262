@@ -36,7 +36,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //#define CONTROL_BOARD_TYPE CONTROL_BOARD_WITESPY_MULTIWII_PRO_2_GPS
 //#define CONTROL_BOARD_TYPE CONTROL_BOARD_WLT_V202
 //#define CONTROL_BOARD_TYPE CONTROL_BOARD_JXD_JD385
-#define CONTROL_BOARD_TYPE CONTROL_BOARD_HUBSAN_H107L
+//#define CONTROL_BOARD_TYPE CONTROL_BOARD_HUBSAN_H107L
+#define CONTROL_BOARD_TYPE CONTROL_BOARD_HUBSAN_Q4
 
 // Choose the type of r/c reciever that will be used
 //#define RX_TYPE RX_NORMAL
@@ -262,7 +263,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define USERSETTINGS_PID_PGAIN_ALTITUDEINDEX 27L << 7;   						// 2.7 on configurator
 #define USERSETTINGS_PID_DGAIN_ALTITUDEINDEX 6L << 9;    						// 6 on configurator
 #define USERSETTINGS_PID_PGAIN_NAVIGATIONINDEX 25L << 11;   				// 2.5 on configurator
-#define USERSETTINGS_PID_DAGIN_NAVIGATIONINDEX 188L << 8;   				// .188 on configurator
+#define USERSETTINGS_PID_DGAIN_NAVIGATIONINDEX 188L << 8;   				// .188 on configurator
 
 
 // Checkbox settings...

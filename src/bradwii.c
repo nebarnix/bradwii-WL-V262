@@ -786,7 +786,7 @@ void defaultusersettings(void)
 		usersettings.pid_pgain[NAVIGATIONINDEX] = PID_TO_CONFIGURATORVALUE_NAV_P(2.5) // 2.5 on configurator
 #endif
 		
-#ifdef USERSETTINGS_PID_DAGIN_NAVIGATIONINDEX	
+#ifdef USERSETTINGS_PID_DGAIN_NAVIGATIONINDEX	
     usersettings.pid_dgain[NAVIGATIONINDEX] = USERSETTINGS_PID_DGAIN_NAVIGATIONINDEX;   
 #else
 	usersettings.pid_dgain[NAVIGATIONINDEX] = PID_TO_CONFIGURATORVALUE_NAV_D(0.188); // .188 on configurator
