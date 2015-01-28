@@ -99,6 +99,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	#define LED6_OUTPUT (DIGITALPORT2 | 6)
 	#define LED6_ON DIGITALON
 #endif
+
+#define DEBUGPORT 6
 // end of Hubsan X4 defs
 
 // ======================================================= HUBSAN H107L ===============================================================

@@ -26,9 +26,9 @@ endif
 
 OBJS += src/a7105.o src/accelerometer.o src/autotune.o src/bradwii.o src/checkboxes.o src/config_X4.o src/eeprom.o src/gyro.o src/imu.o src/leds.o src/output.o src/pilotcontrol.o src/rx_x4.o src/vectors.o 
 
-MINI51_OBJS += lib-Mini51/hal/drv_gpio.o lib-Mini51/hal/drv_hal.o lib-Mini51/hal/drv_pwm.o lib-Mini51/hal/lib_adc.o lib-Mini51/hal/lib_digitalio.o lib-Mini51/hal/lib_fp.o lib-Mini51/hal/lib_i2c.o lib-Mini51/hal/lib_soft_3_wire_spi.o lib-Mini51/hal/lib_timers.o 
+MINI51_OBJS += lib-Mini51/hal/drv_gpio.o lib-Mini51/hal/drv_hal.o lib-Mini51/hal/drv_pwm.o lib-Mini51/hal/drv_serial.o lib-Mini51/hal/lib_adc.o lib-Mini51/hal/lib_digitalio.o lib-Mini51/hal/lib_fp.o lib-Mini51/hal/lib_i2c.o lib-Mini51/hal/lib_serial.o lib-Mini51/hal/lib_soft_3_wire_spi.o lib-Mini51/hal/lib_timers.o 
 
-MINI51_OBJS += lib-Mini51/StdDriver/src/adc.o lib-Mini51/StdDriver/src/clk.o lib-Mini51/StdDriver/src/fmc.o lib-Mini51/StdDriver/src/gpio.o lib-Mini51/StdDriver/src/i2c.o lib-Mini51/StdDriver/src/pwm.o lib-Mini51/StdDriver/src/sys.o lib-Mini51/StdDriver/src/timer.o lib-Mini51/StdDriver/src/wdt.o 
+MINI51_OBJS += lib-Mini51/StdDriver/src/adc.o lib-Mini51/StdDriver/src/clk.o lib-Mini51/StdDriver/src/fmc.o lib-Mini51/StdDriver/src/gpio.o lib-Mini51/StdDriver/src/i2c.o lib-Mini51/StdDriver/src/pwm.o lib-Mini51/StdDriver/src/sys.o lib-Mini51/StdDriver/src/timer.o lib-Mini51/StdDriver/src/wdt.o lib-Mini51/StdDriver/src/uart.o
 
 MINI51_OBJS += lib-Mini51/Device/Nuvoton/Mini51Series/Source/system_Mini51Series.o 
 
@@ -44,7 +44,7 @@ SECONDARY_FLASH += bradwii-x4-gcc.hex
 SECONDARY_SIZE += bradwii-x4-gcc.siz
 
 # All Target
-all: bradwii-x4-gcc
+all: bradwii-x4-gcc.siz
 
 # Tool invocations
 
@@ -81,6 +81,8 @@ clean:
 flash: bradwii-x4-gcc
 	-openocd -f target/mini51_stlinkv2.cfg -c "init; halt; flash write_image erase bradwii-x4-gcc 0; reset; shutdown"
 
+debug:
+	-openocd -f target/mini51_stlinkv2.cfg -c "init; halt; arm semihosting enable; reset run"
 
 .PHONY: all clean dependents
 .SECONDARY:

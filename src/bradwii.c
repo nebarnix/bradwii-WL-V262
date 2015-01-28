@@ -64,9 +64,9 @@ m
 // library headers
 #include "hal.h"
 #include "lib_timers.h"
-#if (MULTIWII_CONFIG_SERIAL_PORTS != NOSERIALPORT)
+//#if (MULTIWII_CONFIG_SERIAL_PORTS != NOSERIALPORT) || (DEBUGPORT == 6)
 #include "lib_serial.h"
-#endif
+//#endif
 #include "lib_i2c.h"
 #include "lib_digitalio.h"
 #include "lib_fp.h"
@@ -133,7 +133,8 @@ static void detectstickcommand(void);
 // It all starts here:
 int main(void)
 {
-	
+
+lib_serial_sendstring(DEBUGPORT, "hithere\r\n");
 #if (BATTERY_ADC_CHANNEL != NO_ADC)
     // Static to keep it off the stack
     static bool isbatterylow;         // Set to true while voltage is below limit
@@ -177,6 +178,7 @@ int main(void)
 			// If nothing found in EEPROM (= data flash on Mini51)
 			// use default settings.
 			// start with default user settings in case there's nothing in eeprom
+lib_serial_sendstring(DEBUGPORT, "defaultsettings()\n");
 			defaultusersettings();
 		
 			// Indicate that default settings are used
@@ -188,7 +190,9 @@ int main(void)
     lib_timers_delaymilliseconds(100); 
 		
     // initialize all other modules
+lib_serial_sendstring(DEBUGPORT, "initrx()");
     initrx();
+lib_serial_sendstring(DEBUGPORT, "ok, now that's over with.\n");
 		
 #if (BATTERY_ADC_CHANNEL != NO_ADC)
     // Give the battery voltage lowpass filter a reasonable starting point.
@@ -202,7 +206,9 @@ int main(void)
     serialinit();
 #endif
 
+lib_serial_sendstring(DEBUGPORT, "initgyro()\n");
     initgyro();
+lib_serial_sendstring(DEBUGPORT, "initacc()\n");
     initacc();
 
 #if (BAROMETER_TYPE != NO_BAROMETER)
@@ -216,20 +222,21 @@ int main(void)
 #if (GPS_TYPE != NO_GPS)
     initgps();
 #endif
+lib_serial_sendstring(DEBUGPORT, "initimu()\n");
     
 		initimu();
 		
 #if 0
-lib_serial_sendstring(0, "PID P=");
+lib_serial_sendstring(DEBUGPORT, "PID P=");
 serialprintfixedpoint_no_linebreak(0, usersettings.pid_pgain[PITCHINDEX]); 
-lib_serial_sendstring(0, " I=");
+lib_serial_sendstring(DEBUGPORT, " I=");
 serialprintfixedpoint_no_linebreak(0, usersettings.pid_igain[PITCHINDEX]);
-lib_serial_sendstring(0, " D=");
+lib_serial_sendstring(DEBUGPORT, " D=");
 serialprintfixedpoint_no_linebreak(0, usersettings.pid_dgain[PITCHINDEX]);
-lib_serial_sendstring(0, "\r\n");
+lib_serial_sendstring(DEBUGPORT, "\r\n");
 #endif
-
 #if (BATTERY_ADC_CHANNEL != NO_ADC)
+lib_serial_sendstring(DEBUGPORT, "doing adc stuff");
 		// Measure internal bandgap voltage now.
     // Battery is probably full and there is no load,
     // so we can expect to have a good external ADC reference
@@ -258,14 +265,14 @@ lib_serial_sendstring(0, "\r\n");
 		}
 		batteryvoltageraw = lib_adc_read_raw();
 		
-		lib_serial_sendstring(0, "POWER ON ADC MEASURMENTS:================\r\n");
-		lib_serial_sendstring(0, "BANDGAP=");
+		lib_serial_sendstring(DEBUGPORT, "POWER ON ADC MEASURMENTS:================\r\n");
+		lib_serial_sendstring(DEBUGPORT, "BANDGAP=");
 		serialprintfixedpoint_no_linebreak(0, initialbandgapvoltage);
-		lib_serial_sendstring(0, "\r\nBGAPVOLTAGERAW=");
+		lib_serial_sendstring(DEBUGPORT, "\r\nBGAPVOLTAGERAW=");
 		serialprintfixedpoint_no_linebreak(0, bandgapvoltageraw);
-		lib_serial_sendstring(0, "\r\nBATTERY RAW=");
+		lib_serial_sendstring(DEBUGPORT, "\r\nBATTERY RAW=");
 		serialprintfixedpoint_no_linebreak(0, batteryvoltageraw);
-		lib_serial_sendstring(0, "=========================================\r\n");
+		lib_serial_sendstring(DEBUGPORT, "=========================================\r\n");
 		lib_timers_delaymilliseconds(2000);
 	#endif
 #endif
@@ -285,7 +292,7 @@ lib_serial_sendstring(0, "\r\n");
 			char x = lib_serial_numcharsavailable(0);
 			//lib_serial_sendchar(0, '0'+x);
 			if (x != 0){
-				lib_serial_sendstring(0, "POWER ON ADC MEASURMENTS:================\r\n");
+				lib_serial_sendstring(DEBUGPORT, "POWER ON ADC MEASURMENTS:================\r\n");
 			  unsigned char c = lib_serial_getchar(0);
 				lib_serial_sendchar(0, c);
 				lib_serial_sendchar(0, '\r');
@@ -297,6 +304,7 @@ lib_serial_sendstring(0, "\r\n");
 		}
 		*/
 		
+lib_serial_sendstring(DEBUGPORT, "going into runloop");
     for (;;) {
 
         // check to see what switches are activated
@@ -315,6 +323,7 @@ lib_serial_sendstring(0, "\r\n");
         if (global.rxvalues[THROTTLEINDEX] < FPSTICKLOW) {      // see if we want to change armed modes
             if (!global.armed) {
                 if (global.activecheckboxitems & CHECKBOXMASKARM) {
+lib_serial_sendstring(DEBUGPORT, "ARMED");
                     global.armed = 1;
 #if (GPS_TYPE!=NO_GPS)
                     navigation_sethometocurrentlocation();
@@ -323,6 +332,7 @@ lib_serial_sendstring(0, "\r\n");
                     global.altitude_when_armed = global.barorawaltitude;
                 }
             } else if (!(global.activecheckboxitems & CHECKBOXMASKARM))
+lib_serial_sendstring(DEBUGPORT, "DISARMED");
                 global.armed = 0;
         } // if throttle low
 
@@ -627,13 +637,13 @@ lib_serial_sendstring(0, "\r\n");
 								lib_fp_lowpassfilter(&(global.batteryvoltage), batteryvoltage, global.timesliver, FIXEDPOINTONEOVERONEFOURTH, TIMESLIVEREXTRASHIFT);	
 
 #if (BATTERY_ADC_DEBUG)
-	lib_serial_sendstring(0, "\r\nBANDGAP=");
+	lib_serial_sendstring(DEBUGPORT, "\r\nBANDGAP=");
 	serialprintfixedpoint_no_linebreak(0, bandgapvoltageraw);
-	lib_serial_sendstring(0, " BATTERY RAW=");
+	lib_serial_sendstring(DEBUGPORT, " BATTERY RAW=");
 	serialprintfixedpoint_no_linebreak(0, batteryvoltageraw);
-	lib_serial_sendstring(0, " BATTERY=");
+	lib_serial_sendstring(DEBUGPORT, " BATTERY=");
 	serialprintfixedpoint_no_linebreak(0, batteryvoltage);
-	lib_serial_sendstring(0, " FILTERED BAT=");
+	lib_serial_sendstring(DEBUGPORT, " FILTERED BAT=");
 	serialprintfixedpoint_no_linebreak(0, global.batteryvoltage);
 #endif							
 								
@@ -675,10 +685,10 @@ lib_serial_sendstring(0, "\r\n");
             // Lost contact with TX
             // Blink LEDs fast alternating
 						leds_blink_continuous(LED_ALL, 125, 125);
-						//lib_serial_sendstring(0, "isfailsafeactive true\r\n");
+						//lib_serial_sendstring(DEBUGPORT, "isfailsafeactive true\r\n");
         }
         else if(!global.armed) {
-					  //lib_serial_sendstring(0, "isfailsafeactive false\r\n");
+					  //lib_serial_sendstring(DEBUGPORT, "isfailsafeactive false\r\n");
 
             // Not armed
             // Short blinks

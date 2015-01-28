@@ -49,7 +49,7 @@ void x4_set_usersettings()
     }
     
     // flight modes, see checkboxes.h for a complete list
-    usersettings.checkboxconfiguration[CHECKBOXARM] = CHECKBOXMASKAUX1LOW;
+//    usersettings.checkboxconfiguration[CHECKBOXARM] = CHECKBOXMASKAUX1LOW;
     usersettings.checkboxconfiguration[CHECKBOXYAWHOLD] = CHECKBOXMASKAUX2LOW;
     
     // set fullacro flight mode (gyro only) for  AUX1 high (LEDs on/off channel on stock TX)

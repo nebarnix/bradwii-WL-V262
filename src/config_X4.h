@@ -60,8 +60,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // uncomment to allow arming and disarming with the sticks:
 // Arming and disarming only happen at low throttle
 // Uncomment the following two lines to allow arming using yaw
-//#define STICK_ARM STICK_COMMAND_YAW_HIGH
-//#define STICK_DISARM STICK_COMMAND_YAW_LOW
+#define STICK_ARM STICK_COMMAND_YAW_HIGH
+#define STICK_DISARM STICK_COMMAND_YAW_LOW
 
 // uncomment the following two lines to allow arming using yaw, roll, and pitch all at once
 //#define STICK_ARM STICK_COMMAND_YAW_HIGH+STICK_COMMAND_ROLL_HIGH+STICK_COMMAND_PITCH_LOW
@@ -75,6 +75,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Be sure to uncomment and set the baud rate for any enabled serial ports.
 // note: two examples are given below, but any combination of ports can be added together.
 
+//#define MULTIWII_CONFIG_SERIAL_PORTS NOSERIALPORT
 //#define MULTIWII_CONFIG_SERIAL_PORTS NOSERIALPORT
 //#define MULTIWII_CONFIG_SERIAL_PORTS SERIALPORT1
 //#define MULTIWII_CONFIG_SERIAL_PORTS SERIALPORT1+SERIALPORT3
@@ -181,11 +182,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Uncomment if using DC motors
 #define DC_MOTORS
 
-// Uncomment the following line iy you want to use the ADC to monitor the battery voltage
-#define ADC_USE
-// #define ADC_USE NO_ADC
+// #define BATTERY_ADC_CHANNEL NO_ADC
+#define BATTERY_ADC_CHANNEL (1<<4)
 
-#define ADC_CHANNEL LIB_ADC_CHAN5
+#define BATTERY_ADC_DEBUG 0
 
 // ADC external reference voltage.
 // In the MINI54 the ADC reference voltage is internally tied to
@@ -224,6 +224,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Unit: Volt
 #define BATTERY_UNDERVOLTAGE_LIMIT 3.2
 
+// If battery voltage is below BATTTERY_UNDERVOLTAGE_LIMIT for a defined amount of time
+// enables the battery low indicator all the time until battery is replaced
+// 
+#define BATTERY_LOW_TIMER 1000 
 
 // Use of LEDs
 #define LED1 LED1_STATE			//0x01
