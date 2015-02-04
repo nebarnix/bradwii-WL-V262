@@ -24,7 +24,7 @@ ifeq ($(COPTER), "X4")
 MICRO="MINI51"
 endif
 
-OBJS += src/a7105.o src/accelerometer.o src/autotune.o src/bradwii.o src/checkboxes.o src/config_X4.o src/eeprom.o src/gyro.o src/imu.o src/leds.o src/output.o src/pilotcontrol.o src/rx_x4.o src/vectors.o 
+OBJS += src/a7105.o src/accelerometer.o src/autotune.o src/bradwii.o src/checkboxes.o src/config_X4.o src/eeprom.o src/gyro.o src/imu.o src/leds.o src/output.o src/pilotcontrol.o src/serial.o src/rx_x4.o src/vectors.o 
 
 MINI51_OBJS += lib-Mini51/hal/drv_gpio.o lib-Mini51/hal/drv_hal.o lib-Mini51/hal/drv_pwm.o lib-Mini51/hal/drv_serial.o lib-Mini51/hal/lib_adc.o lib-Mini51/hal/lib_digitalio.o lib-Mini51/hal/lib_fp.o lib-Mini51/hal/lib_i2c.o lib-Mini51/hal/lib_serial.o lib-Mini51/hal/lib_soft_3_wire_spi.o lib-Mini51/hal/lib_timers.o 
 
@@ -51,7 +51,7 @@ all: bradwii-x4-gcc.siz
 %.o: %.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cross ARM C Compiler'
-	arm-none-eabi-gcc -mcpu=cortex-m0 -mthumb -Os -ffunction-sections -fno-common -fno-builtin -Wall  -g -DX4_BUILD -I"lib-Mini51/hal" -I"src" -I"lib-Mini51/Device/Nuvoton/Mini51Series/Include" -I"lib-Mini51/CMSIS/Include" -I"lib-Mini51/StdDriver/inc" -std=gnu99 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$@" -c -o "$@" "$<"
+	arm-none-eabi-gcc -mcpu=cortex-m0 -mthumb -Os -ffunction-sections -fno-common -fno-builtin -Wall  -g -DX4_BUILD -DDEBUG_ENABLE_SEMIHOST -I"lib-Mini51/hal" -I"src" -I"lib-Mini51/Device/Nuvoton/Mini51Series/Include" -I"lib-Mini51/CMSIS/Include" -I"lib-Mini51/StdDriver/inc" -std=gnu99 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$@" -c -o "$@" "$<"
 
 bradwii-x4-gcc: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'

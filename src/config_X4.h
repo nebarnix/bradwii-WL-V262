@@ -60,8 +60,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // uncomment to allow arming and disarming with the sticks:
 // Arming and disarming only happen at low throttle
 // Uncomment the following two lines to allow arming using yaw
-#define STICK_ARM STICK_COMMAND_YAW_HIGH
-#define STICK_DISARM STICK_COMMAND_YAW_LOW
+//#define STICK_ARM STICK_COMMAND_YAW_HIGH
+//#define STICK_DISARM STICK_COMMAND_YAW_LOW
 
 // uncomment the following two lines to allow arming using yaw, roll, and pitch all at once
 //#define STICK_ARM STICK_COMMAND_YAW_HIGH+STICK_COMMAND_ROLL_HIGH+STICK_COMMAND_PITCH_LOW
@@ -183,9 +183,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define DC_MOTORS
 
 // #define BATTERY_ADC_CHANNEL NO_ADC
+#if CONTROL_BOARD_TYPE == CONTROL_BOARD_HUBSAN_Q4
 #define BATTERY_ADC_CHANNEL (1<<4)
-
-#define BATTERY_ADC_DEBUG 0
+#elif CONTROL_BOARD_TYPE == CONTROL_BOARD_HUBSAN_H107L
+#define BATTERY_ADC_CHANNEL (1<<5)
+#endif
 
 // ADC external reference voltage.
 // In the MINI54 the ADC reference voltage is internally tied to

@@ -85,7 +85,8 @@ void lib_serial_sendchar(unsigned char serialportnumber, unsigned char c)
     // add a character to the send buffer
 	    asm volatile ("mov r0, %0\n\t"
 		    "mov r1, %1\n\t"
-            "bkpt 0xAB" : :"I" (SYS_WRITEC), "l" ((int)&c): );
+            "bkpt 0xAB \n\t"
+	    "nop \n\t" : :"I" (SYS_WRITEC), "l" ((int)&c): );
     } else {
         serialPort_t *port = lib_serial_getport(serialportnumber);
         uartWrite(port, c);
@@ -98,7 +99,8 @@ void lib_serial_sendstring(unsigned char serialportnumber, char *string)
     // add a character to the send buffer
 	    asm volatile ("mov r0, %0\n\t"
 		    "mov r1, %1\n\t"
-            "bkpt 0xAB" : :"I" (SYS_WRITE0), "l" (string): );
+            "bkpt 0xAB\n\t" 
+            "nop \n\t" : :"I" (SYS_WRITE0), "l" (string): );
     } else {
     // adds the string to the output buffer.
     while (*string) 

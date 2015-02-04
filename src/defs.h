@@ -101,7 +101,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endif
 
 #define DEBUGPORT 6
-// end of Hubsan X4 defs
+// end of Hubsan Q4 defs
 
 // ======================================================= HUBSAN H107L ===============================================================
 #elif CONTROL_BOARD_TYPE == CONTROL_BOARD_HUBSAN_H107L

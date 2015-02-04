@@ -134,7 +134,6 @@ static void detectstickcommand(void);
 int main(void)
 {
 
-lib_serial_sendstring(DEBUGPORT, "hithere\r\n");
 #if (BATTERY_ADC_CHANNEL != NO_ADC)
     // Static to keep it off the stack
     static bool isbatterylow;         // Set to true while voltage is below limit
@@ -178,7 +177,6 @@ lib_serial_sendstring(DEBUGPORT, "hithere\r\n");
 			// If nothing found in EEPROM (= data flash on Mini51)
 			// use default settings.
 			// start with default user settings in case there's nothing in eeprom
-lib_serial_sendstring(DEBUGPORT, "defaultsettings()\n");
 			defaultusersettings();
 		
 			// Indicate that default settings are used
@@ -190,9 +188,9 @@ lib_serial_sendstring(DEBUGPORT, "defaultsettings()\n");
     lib_timers_delaymilliseconds(100); 
 		
     // initialize all other modules
-lib_serial_sendstring(DEBUGPORT, "initrx()");
+lib_serial_sendstring(DEBUGPORT, "binding\n");
     initrx();
-lib_serial_sendstring(DEBUGPORT, "ok, now that's over with.\n");
+lib_serial_sendstring(DEBUGPORT, "bound\n");
 		
 #if (BATTERY_ADC_CHANNEL != NO_ADC)
     // Give the battery voltage lowpass filter a reasonable starting point.
@@ -206,9 +204,7 @@ lib_serial_sendstring(DEBUGPORT, "ok, now that's over with.\n");
     serialinit();
 #endif
 
-lib_serial_sendstring(DEBUGPORT, "initgyro()\n");
     initgyro();
-lib_serial_sendstring(DEBUGPORT, "initacc()\n");
     initacc();
 
 #if (BAROMETER_TYPE != NO_BAROMETER)
@@ -222,7 +218,6 @@ lib_serial_sendstring(DEBUGPORT, "initacc()\n");
 #if (GPS_TYPE != NO_GPS)
     initgps();
 #endif
-lib_serial_sendstring(DEBUGPORT, "initimu()\n");
     
 		initimu();
 		
@@ -236,7 +231,6 @@ serialprintfixedpoint_no_linebreak(0, usersettings.pid_dgain[PITCHINDEX]);
 lib_serial_sendstring(DEBUGPORT, "\r\n");
 #endif
 #if (BATTERY_ADC_CHANNEL != NO_ADC)
-lib_serial_sendstring(DEBUGPORT, "doing adc stuff");
 		// Measure internal bandgap voltage now.
     // Battery is probably full and there is no load,
     // so we can expect to have a good external ADC reference
@@ -304,7 +298,7 @@ lib_serial_sendstring(DEBUGPORT, "doing adc stuff");
 		}
 		*/
 		
-lib_serial_sendstring(DEBUGPORT, "going into runloop");
+lib_serial_sendstring(DEBUGPORT, "runloop\n");
     for (;;) {
 
         // check to see what switches are activated
@@ -323,7 +317,6 @@ lib_serial_sendstring(DEBUGPORT, "going into runloop");
         if (global.rxvalues[THROTTLEINDEX] < FPSTICKLOW) {      // see if we want to change armed modes
             if (!global.armed) {
                 if (global.activecheckboxitems & CHECKBOXMASKARM) {
-lib_serial_sendstring(DEBUGPORT, "ARMED");
                     global.armed = 1;
 #if (GPS_TYPE!=NO_GPS)
                     navigation_sethometocurrentlocation();
@@ -331,9 +324,9 @@ lib_serial_sendstring(DEBUGPORT, "ARMED");
                     global.heading_when_armed = global.currentestimatedeulerattitude[YAWINDEX];
                     global.altitude_when_armed = global.barorawaltitude;
                 }
-            } else if (!(global.activecheckboxitems & CHECKBOXMASKARM))
-lib_serial_sendstring(DEBUGPORT, "DISARMED");
+            } else if (!(global.activecheckboxitems & CHECKBOXMASKARM)) {
                 global.armed = 0;
+			}
         } // if throttle low
 
         if(!global.armed) {

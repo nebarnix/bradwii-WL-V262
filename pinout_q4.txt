@@ -1,4 +1,4 @@
-Nuvoton Mini54ZAN in Hubsan Q4 / Estes Proto-X
+Nuvoton Mini54ZAN / HBS002 in Hubsan Q4 / Estes Proto-X
  1 - ACMP0_P, AIN5, P1.5 	        -
  2 - /RESET 			        - "R" pad (?)
  3 - ACMP1_N, AIN6, P3.0	        -
