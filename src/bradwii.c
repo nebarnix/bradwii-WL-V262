@@ -64,9 +64,9 @@ m
 // library headers
 #include "hal.h"
 #include "lib_timers.h"
-//#if (MULTIWII_CONFIG_SERIAL_PORTS != NOSERIALPORT) || (DEBUGPORT == 6)
+#if (MULTIWII_CONFIG_SERIAL_PORTS != NOSERIALPORT) || (DEBUGPORT == 6)
 #include "lib_serial.h"
-//#endif
+#endif
 #include "lib_i2c.h"
 #include "lib_digitalio.h"
 #include "lib_fp.h"
@@ -317,6 +317,7 @@ lib_serial_sendstring(DEBUGPORT, "runloop\n");
         if (global.rxvalues[THROTTLEINDEX] < FPSTICKLOW) {      // see if we want to change armed modes
             if (!global.armed) {
                 if (global.activecheckboxitems & CHECKBOXMASKARM) {
+                    lib_serial_sendstring(DEBUGPORT, "armed\n");
                     global.armed = 1;
 #if (GPS_TYPE!=NO_GPS)
                     navigation_sethometocurrentlocation();
@@ -325,6 +326,7 @@ lib_serial_sendstring(DEBUGPORT, "runloop\n");
                     global.altitude_when_armed = global.barorawaltitude;
                 }
             } else if (!(global.activecheckboxitems & CHECKBOXMASKARM)) {
+                lib_serial_sendstring(DEBUGPORT, "disarmed\n");
                 global.armed = 0;
 			}
         } // if throttle low
@@ -568,7 +570,7 @@ lib_serial_sendstring(DEBUGPORT, "runloop\n");
             pidoutput[x] = lib_fp_multiply(gainschedulingmultiplier, pidoutput[x]);
         }
 
-#if (CONTROL_BOARD_TYPE == CONTROL_BOARD_HUBSAN_H107L)
+#if (CONTROL_BOARD_TYPE == CONTROL_BOARD_HUBSAN_H107L) || (CONTROL_BOARD_TYPE == CONTROL_BOARD_HUBSAN_Q4)
 		// On Hubsan X4 H107L the front right motor
 		// rotates clockwise (viewed from top).
 		// On the J385 the motors spin in the opposite direction.

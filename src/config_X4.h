@@ -60,9 +60,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // uncomment to allow arming and disarming with the sticks:
 // Arming and disarming only happen at low throttle
 // Uncomment the following two lines to allow arming using yaw
-//#define STICK_ARM STICK_COMMAND_YAW_HIGH
-//#define STICK_DISARM STICK_COMMAND_YAW_LOW
 
+#if CONTROL_BOARD_TYPE == CONTROL_BOARD_HUBSAN_Q4
+#define STICK_ARM STICK_COMMAND_YAW_HIGH
+#define STICK_DISARM STICK_COMMAND_YAW_LOW
+#endif
 // uncomment the following two lines to allow arming using yaw, roll, and pitch all at once
 //#define STICK_ARM STICK_COMMAND_YAW_HIGH+STICK_COMMAND_ROLL_HIGH+STICK_COMMAND_PITCH_LOW
 //#define STICK_DISARM STICK_COMMAND_YAW_LOW+STICK_COMMAND_ROLL_LOW+STICK_COMMAND_PITCH_LOW
@@ -124,8 +126,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define AUX_MID_RANGE_HIGH 1700
 
 // Define low and high values for stick commands
+#if CONTROL_BOARD_TYPE == CONTROL_BOARD_HUBSAN_Q4
+#define STICK_RANGE_LOW 1350
+#define STICK_RANGE_HIGH 1650
+#elif CONTROL_BOARD_TYPE == CONTROL_BOARD_HUBSAN_H107L
 #define STICK_RANGE_LOW 1150
 #define STICK_RANGE_HIGH 1850
+#endif
 
 // un-comment if you don't want to include code for a compass, otherwise it will default to what the control board has on it
 #define COMPASS_TYPE NO_COMPASS
