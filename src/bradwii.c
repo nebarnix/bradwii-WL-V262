@@ -61,18 +61,6 @@ m
 
 */
 
-// library headers
-#include "hal.h"
-#include "lib_timers.h"
-#if (MULTIWII_CONFIG_SERIAL_PORTS != NOSERIALPORT) || (DEBUGPORT == 6)
-#include "lib_serial.h"
-#endif
-#include "lib_i2c.h"
-#include "lib_digitalio.h"
-#include "lib_fp.h"
-#if (BATTERY_ADC_CHANNEL != NO_ADC)
-#include "lib_adc.h"
-#endif
 
 // project file headers
 #include "bradwii.h"
@@ -90,6 +78,19 @@ m
 #include "pilotcontrol.h"
 #include "autotune.h"
 #include "leds.h"
+
+// library headers
+#include "hal.h"
+#include "lib_timers.h"
+#if (MULTIWII_CONFIG_SERIAL_PORTS != NOSERIALPORT) || (DEBUGPORT == 6)
+#include "lib_serial.h"
+#endif
+#include "lib_i2c.h"
+#include "lib_digitalio.h"
+#include "lib_fp.h"
+#if (BATTERY_ADC_CHANNEL != NO_ADC)
+#include "lib_adc.h"
+#endif
 
 // Data type for stick movement detection to execute accelerometer calibration
 typedef enum stickstate_tag {
@@ -188,9 +189,7 @@ int main(void)
     lib_timers_delaymilliseconds(100); 
 		
     // initialize all other modules
-lib_serial_sendstring(DEBUGPORT, "binding\n");
     initrx();
-lib_serial_sendstring(DEBUGPORT, "bound\n");
 		
 #if (BATTERY_ADC_CHANNEL != NO_ADC)
     // Give the battery voltage lowpass filter a reasonable starting point.
@@ -298,7 +297,6 @@ lib_serial_sendstring(DEBUGPORT, "\r\n");
 		}
 		*/
 		
-lib_serial_sendstring(DEBUGPORT, "runloop\n");
     for (;;) {
 
         // check to see what switches are activated
@@ -317,7 +315,6 @@ lib_serial_sendstring(DEBUGPORT, "runloop\n");
         if (global.rxvalues[THROTTLEINDEX] < FPSTICKLOW) {      // see if we want to change armed modes
             if (!global.armed) {
                 if (global.activecheckboxitems & CHECKBOXMASKARM) {
-                    lib_serial_sendstring(DEBUGPORT, "armed\n");
                     global.armed = 1;
 #if (GPS_TYPE!=NO_GPS)
                     navigation_sethometocurrentlocation();
@@ -326,7 +323,6 @@ lib_serial_sendstring(DEBUGPORT, "runloop\n");
                     global.altitude_when_armed = global.barorawaltitude;
                 }
             } else if (!(global.activecheckboxitems & CHECKBOXMASKARM)) {
-                lib_serial_sendstring(DEBUGPORT, "disarmed\n");
                 global.armed = 0;
 			}
         } // if throttle low
@@ -335,6 +331,7 @@ lib_serial_sendstring(DEBUGPORT, "runloop\n");
             // Not armed: check if there is a stick command to execute.
             detectstickcommand();
         }
+
 
 #if (GPS_TYPE!=NO_GPS)
         // turn on or off navigation when appropriate
@@ -366,7 +363,7 @@ lib_serial_sendstring(DEBUGPORT, "runloop\n");
 	        // turn on the LED when we are stable and the gps has 5 satellites or more
 #if (GPS_TYPE==NO_GPS)
 #if (GPS_LED != NONE)
-				leds_set(((global.stable == 0) ? (!GPS_LED) : GPS_LED));
+	leds_set(((global.stable == 0) ? (!GPS_LED) : GPS_LED));
 #endif
 #else
 #if (LED_GPS != NONE)				
@@ -403,12 +400,16 @@ lib_serial_sendstring(DEBUGPORT, "runloop\n");
 #ifndef NO_AUTOTUNE
         // let autotune adjust the angle error if the pilot has autotune turned on
         if (global.activecheckboxitems & CHECKBOXMASKAUTOTUNE) {
-            if (!(global.previousactivecheckboxitems & CHECKBOXMASKAUTOTUNE))
+            if (!(global.previousactivecheckboxitems & CHECKBOXMASKAUTOTUNE)) {
                 autotune(angleerror, AUTOTUNESTARTING); // tell autotune that we just started autotuning
+			lib_serial_sendstring(DEBUGPORT, "AT START\n");
+		}
             else
                 autotune(angleerror, AUTOTUNETUNING);   // tell autotune that we are in the middle of autotuning
-        } else if (global.previousactivecheckboxitems & CHECKBOXMASKAUTOTUNE)
+        } else if (global.previousactivecheckboxitems & CHECKBOXMASKAUTOTUNE) {
+			lib_serial_sendstring(DEBUGPORT, "AT STOP\n");
             autotune(angleerror, AUTOTUNESTOPPING);     // tell autotune that we just stopped autotuning
+	}
 #endif
 
         // get the pilot's throttle component
@@ -571,6 +572,7 @@ lib_serial_sendstring(DEBUGPORT, "runloop\n");
         }
 
 #if (CONTROL_BOARD_TYPE == CONTROL_BOARD_HUBSAN_H107L) || (CONTROL_BOARD_TYPE == CONTROL_BOARD_HUBSAN_Q4)
+
 		// On Hubsan X4 H107L the front right motor
 		// rotates clockwise (viewed from top).
 		// On the J385 the motors spin in the opposite direction.

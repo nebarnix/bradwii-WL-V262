@@ -57,20 +57,25 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // uncomment to set the number of RX channels, otherwise it will default to what the control board/receiver can handle
 //#define RXNUMCHANNELS 8
 
-// uncomment to allow arming and disarming with the sticks:
-// Arming and disarming only happen at low throttle
-// Uncomment the following two lines to allow arming using yaw
+// arm/disarm Q4 with pitch high/low, or yaw high/low on X4.  Q4
+// TX has a narrow range on the horizontal stick axes, using pitch
+// helps
 
-#if CONTROL_BOARD_TYPE == CONTROL_BOARD_HUBSAN_Q4
+#if CONTROL_BOARD_TYPE == CONTROL_BOARD_HUBSAN_Q4 
+#define STICK_ARM STICK_COMMAND_PITCH_HIGH
+#define STICK_DISARM STICK_COMMAND_PITCH_LOW
+
+#elif CONTROL_BOARD_TYPE == CONTROL_BOARD_HUBSAN_H107L
 #define STICK_ARM STICK_COMMAND_YAW_HIGH
 #define STICK_DISARM STICK_COMMAND_YAW_LOW
 #endif
+
 // uncomment the following two lines to allow arming using yaw, roll, and pitch all at once
 //#define STICK_ARM STICK_COMMAND_YAW_HIGH+STICK_COMMAND_ROLL_HIGH+STICK_COMMAND_PITCH_LOW
 //#define STICK_DISARM STICK_COMMAND_YAW_LOW+STICK_COMMAND_ROLL_LOW+STICK_COMMAND_PITCH_LOW
 
 // Choose an aircraft configuration (defaults to QUADX)
-//#define AIRCRAFT_CONFIGURATION QUADX
+#define AIRCRAFT_CONFIGURATION QUADX
 
 // Choose which serial ports will be used to transfer data to a configuration device.
 // Multiple serial channels can be configured. (i.e. one for computer, one for bluetooth).
@@ -127,8 +132,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // Define low and high values for stick commands
 #if CONTROL_BOARD_TYPE == CONTROL_BOARD_HUBSAN_Q4
-#define STICK_RANGE_LOW 1350
-#define STICK_RANGE_HIGH 1650
+#define STICK_RANGE_LOW 1150
+#define STICK_RANGE_HIGH 1700
 #elif CONTROL_BOARD_TYPE == CONTROL_BOARD_HUBSAN_H107L
 #define STICK_RANGE_LOW 1150
 #define STICK_RANGE_HIGH 1850
@@ -156,7 +161,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define ESC_CALIB_HIGH MAX_MOTOR_OUTPUT
 
 // un-comment if you don't want to include autotune code
-#define NO_AUTOTUNE
+//#define NO_AUTOTUNE
 
 // To adjust how agressive the tuning is, adjust the AUTOTUNEMAXOSCILLATION value.  A larger
 // value will result in more agressive tuning. A lower value will result in softer tuning.
@@ -257,29 +262,69 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define USERSETTINGS_MAXPITCHANDROLLRATE  400L << FIXEDPOINTSHIFT 	// degrees per second
 
 // set default PID settings
+#if CONTROL_BOARD_TYPE == CONTROL_BOARD_HUBSAN_Q4
 // pitch PIDs
-#define USERSETTINGS_PID_PGAIN_PITCHINDEX 35L << 3   													// 1.5 on configurator
-#define USERSETTINGS_PID_IGAIN_PITCHINDEX 4L 																	// .008 on configurator
-#define USERSETTINGS_PID_DGAIN_PITCHINDEX 22L << 2    													// 8 on configurator
-
+#define USERSETTINGS_PID_PGAIN_PITCHINDEX PID_TO_CONFIGURATORVALUE_P(3.5)
+#define USERSETTINGS_PID_IGAIN_PITCHINDEX PID_TO_CONFIGURATORVALUE_I(0.004)
+#define USERSETTINGS_PID_DGAIN_PITCHINDEX PID_TO_CONFIGURATORVALUE_D(22.0)
+ 
 // roll PIDs
-#define USERSETTINGS_PID_PGAIN_ROLLINDEX 35L << 3   													// 1.5 on configurator
-#define USERSETTINGS_PID_IGAIN_ROLLINDEX 4L 																	// .008 on configurator
-#define USERSETTINGS_PID_DGAIN_ROLLINDEX 22L << 2
+#define USERSETTINGS_PID_PGAIN_ROLLINDEX PID_TO_CONFIGURATORVALUE_P(3.5)
+#define USERSETTINGS_PID_IGAIN_ROLLINDEX PID_TO_CONFIGURATORVALUE_I(0.004)
+#define USERSETTINGS_PID_DGAIN_ROLLINDEX PID_TO_CONFIGURATORVALUE_D(22.0)
 
 // yaw PIDs
-#define USERSETTINGS_PID_PGAIN_YAWINDEX 30L << 3   													// 1.5 on configurator
-#define USERSETTINGS_PID_IGAIN_YAWINDEX 0L 																	// .008 on configurator
-#define USERSETTINGS_PID_DGAIN_YAWINDEX 22L << 2
+#define USERSETTINGS_PID_PGAIN_YAWINDEX PID_TO_CONFIGURATORVALUE_P(10.0)
+#define USERSETTINGS_PID_IGAIN_YAWINDEX PID_TO_CONFIGURATORVALUE_I(0.000)
+#define USERSETTINGS_PID_DGAIN_YAWINDEX PID_TO_CONFIGURATORVALUE_D(22.0)
 
 //
 #define USERSETTINGS_PID_PGAIN_ALTITUDEINDEX 27L << 7;   						// 2.7 on configurator
 #define USERSETTINGS_PID_DGAIN_ALTITUDEINDEX 6L << 9;    						// 6 on configurator
 #define USERSETTINGS_PID_PGAIN_NAVIGATIONINDEX 25L << 11;   				// 2.5 on configurator
 #define USERSETTINGS_PID_DGAIN_NAVIGATIONINDEX 188L << 8;   				// .188 on configurator
+#elif CONTROL_BOARD_TYPE == CONTROL_BOARD_HUBSAN_H107L
 
+// pitch PIDs
+#define USERSETTINGS_PID_PGAIN_PITCHINDEX PID_TO_CONFIGURATORVALUE_P(3.5)
+#define USERSETTINGS_PID_IGAIN_PITCHINDEX PID_TO_CONFIGURATORVALUE_I(0.004)
+#define USERSETTINGS_PID_DGAIN_PITCHINDEX PID_TO_CONFIGURATORVALUE_D(22.0)
+ 
+// roll PIDs
+#define USERSETTINGS_PID_PGAIN_ROLLINDEX PID_TO_CONFIGURATORVALUE_P(3.5)
+#define USERSETTINGS_PID_IGAIN_ROLLINDEX PID_TO_CONFIGURATORVALUE_I(0.004)
+#define USERSETTINGS_PID_DGAIN_ROLLINDEX PID_TO_CONFIGURATORVALUE_D(22.0)
+
+// yaw PIDs
+#define USERSETTINGS_PID_PGAIN_YAWINDEX PID_TO_CONFIGURATORVALUE_P(10.0)
+#define USERSETTINGS_PID_IGAIN_YAWINDEX PID_TO_CONFIGURATORVALUE_I(0.000)
+#define USERSETTINGS_PID_DGAIN_YAWINDEX PID_TO_CONFIGURATORVALUE_D(22.0)
+
+//
+#define USERSETTINGS_PID_PGAIN_ALTITUDEINDEX 27L << 7;   						// 2.7 on configurator
+#define USERSETTINGS_PID_DGAIN_ALTITUDEINDEX 6L << 9;    						// 6 on configurator
+#define USERSETTINGS_PID_PGAIN_NAVIGATIONINDEX 25L << 11;   				// 2.5 on configurator
+#define USERSETTINGS_PID_DGAIN_NAVIGATIONINDEX 188L << 8;   				// .188 on configurator
+#endif
 
 // Checkbox settings...
+#if CONTROL_BOARD_TYPE == CONTROL_BOARD_HUBSAN_Q4
+// #define USERSETTINGS_CHECKBOXARM CHECKBOXMASKAUX1HIGH
+// #define USERSETTINGS_CHECKBOXAUTOTHROTTLE
+// #define USERSETTINGS_CHECKBOXALTHOLD
+// #define USERSETTINGS_CHECKBOXCOMPASS
+// #define USERSETTINGS_CHECKBOXPOSITIONHOLD
+// #define USERSETTINGS_CHECKBOXRETURNTOHOME
+//#define USERSETTINGS_CHECKBOXSEMIACRO CHECKBOXMASKAUX1HIGH
+// #define USERSETTINGS_CHECKBOXFULLACRO
+//#define USERSETTINGS_CHECKBOXHIGHRATES CHECKBOXMASKAUX1HIGH
+//#define USERSETTINGS_CHECKBOXHIGHANGLE CHECKBOXMASKAUX1LOW
+#define USERSETTINGS_CHECKBOXAUTOTUNE CHECKBOXMASKAUX1LOW
+// #define USERSETTINGS_CHECKBOXUNCRASHABLE
+// #define USERSETTINGS_CHECKBOXHEADFREE
+// #define USERSETTINGS_CHECKBOXYAWHOLD
+
+#elif CONTROL_BOARD_TYPE == CONTROL_BOARD_HUBSAN_H107L
 // #define USERSETTINGS_CHECKBOXARM CHECKBOXMASKAUX1HIGH
 // #define USERSETTINGS_CHECKBOXAUTOTHROTTLE
 // #define USERSETTINGS_CHECKBOXALTHOLD
@@ -294,3 +339,4 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // #define USERSETTINGS_CHECKBOXUNCRASHABLE
 // #define USERSETTINGS_CHECKBOXHEADFREE
 // #define USERSETTINGS_CHECKBOXYAWHOLD
+#endif

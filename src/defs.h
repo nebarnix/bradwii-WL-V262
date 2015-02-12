@@ -72,12 +72,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // LEDs 2 & 4 are tied together
 #ifdef LED1
 	#define LED1_OUTPUT (DIGITALPORT5 | 1)
-	#define LED1_ON DIGITALOFF
+	#define LED1_ON DIGITALON
 #endif
 
 #ifdef LED2
 	#define LED2_OUTPUT	(DIGITALPORT0 | 4)
-	#define LED2_ON DIGITALOFF
+	#define LED2_ON DIGITALON
 #endif
 
 #ifdef LED3
