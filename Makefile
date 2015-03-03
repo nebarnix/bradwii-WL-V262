@@ -79,7 +79,7 @@ clean:
 
 # TODO: package up openocd changes
 flash: bradwii-x4-gcc
-	-openocd -f target/mini51_stlinkv2.cfg -c "init; halt; flash write_image erase bradwii-x4-gcc 0; reset; shutdown"
+	-openocd -f target/mini51_stlinkv2.cfg -c "init; halt; flash write_image erase bradwii-x4-gcc 0; flash erase_address 0x3e00 0x200; reset run; shutdown"
 
 debug:
 	-openocd -f target/mini51_stlinkv2.cfg -c "init; halt; arm semihosting enable; reset run"

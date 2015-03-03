@@ -427,15 +427,14 @@ void serialprintnumber(char portnumber, long num, int digits, int decimals, char
     char stg[12];
     char *ptr;
     int x;
-
     ptr = stg + 11;
-
+    char sign;
     *ptr = '\0';
     if (num < 0) {
         num = -num;
-        *(--ptr) = '-';
+        sign = '-';
     } else
-        *(--ptr) = ' ';
+        sign = ' ';
 
     for (x = 1; x <= digits; ++x) {
         if (num == 0)
@@ -447,6 +446,7 @@ void serialprintnumber(char portnumber, long num, int digits, int decimals, char
         if (x == decimals)
             *(--ptr) = '.';
     }
+    *(--ptr) = sign;
     lib_serial_sendstring(portnumber, ptr);
 }
 

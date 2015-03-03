@@ -173,12 +173,15 @@ int main(void)
     
     // try to load usersettings from eeprom
     readusersettingsfromeeprom();
+lib_serial_sendstring(DEBUGPORT, "LOAD_EEP\n");
 
     if(!global.usersettingsfromeeprom) {
+lib_serial_sendstring(DEBUGPORT, "BLANK_EEP\n");
 			// If nothing found in EEPROM (= data flash on Mini51)
 			// use default settings.
 			// start with default user settings in case there's nothing in eeprom
 			defaultusersettings();
+writeusersettingstoeeprom();
 		
 			// Indicate that default settings are used
 			leds_blink_cycles(LED1, 100, 100, 10);
@@ -229,6 +232,31 @@ lib_serial_sendstring(DEBUGPORT, " D=");
 serialprintfixedpoint_no_linebreak(0, usersettings.pid_dgain[PITCHINDEX]);
 lib_serial_sendstring(DEBUGPORT, "\r\n");
 #endif
+
+#if 0
+#warning REMOVE_BEFORE_FLIGHT
+
+lib_serial_sendstring(DEBUGPORT, "PTC P=");
+serialprintfixedpoint_no_linebreak(DEBUGPORT, (usersettings.pid_pgain[PITCHINDEX]<<13)/10+1);
+lib_serial_sendstring(DEBUGPORT, " I=");
+serialprintfixedpoint_no_linebreak(DEBUGPORT, (usersettings.pid_igain[PITCHINDEX]<<16)/1000+1);
+lib_serial_sendstring(DEBUGPORT, " D=");
+serialprintfixedpoint_no_linebreak(DEBUGPORT, (usersettings.pid_dgain[PITCHINDEX]<<14)+1);
+lib_serial_sendstring(DEBUGPORT, "\nROL P=");
+serialprintfixedpoint_no_linebreak(DEBUGPORT, (usersettings.pid_pgain[ROLLINDEX]<<13)/10+1);
+lib_serial_sendstring(DEBUGPORT, " I=");
+serialprintfixedpoint_no_linebreak(DEBUGPORT, (usersettings.pid_igain[ROLLINDEX]<<16)/1000+1);
+lib_serial_sendstring(DEBUGPORT, " D=");
+serialprintfixedpoint_no_linebreak(DEBUGPORT, (usersettings.pid_dgain[ROLLINDEX]<<14)+1);
+lib_serial_sendstring(DEBUGPORT, "\nYAW P=");
+serialprintfixedpoint_no_linebreak(DEBUGPORT, (usersettings.pid_pgain[YAWINDEX]<<13)/10+1);
+lib_serial_sendstring(DEBUGPORT, " I=");
+serialprintfixedpoint_no_linebreak(DEBUGPORT, (usersettings.pid_igain[YAWINDEX]<<16)/1000+1);
+lib_serial_sendstring(DEBUGPORT, " D=");
+serialprintfixedpoint_no_linebreak(DEBUGPORT, (usersettings.pid_dgain[YAWINDEX]<<14)+1);
+lib_serial_sendstring(DEBUGPORT, "\n");
+#endif
+
 #if (BATTERY_ADC_CHANNEL != NO_ADC)
 		// Measure internal bandgap voltage now.
     // Battery is probably full and there is no load,
@@ -330,6 +358,7 @@ lib_serial_sendstring(DEBUGPORT, "\r\n");
         if(!global.armed) {
             // Not armed: check if there is a stick command to execute.
             detectstickcommand();
+
         }
 
 

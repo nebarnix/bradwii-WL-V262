@@ -125,9 +125,9 @@ void bind()
     while(1){
 			
         if( lib_timers_gettimermicroseconds(0) % 500000 > 250000)
-            leds_set(LED1 | LED5);
+            leds_set(LED1 | LED3);
         else
-            leds_set(LED2 | LED6);
+            leds_set(LED2 | LED4);
 
         A7105_Strobe(A7105_STANDBY);
         channel=allowed_ch[chan];

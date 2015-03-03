@@ -68,36 +68,24 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endif
 
 // LED Outputs (4)
-// LEDs 1 & 3 are tied together
-// LEDs 2 & 4 are tied together
 #ifdef LED1
-	#define LED1_OUTPUT (DIGITALPORT5 | 1)
-	#define LED1_ON DIGITALON
+	#define LED1_OUTPUT	(DIGITALPORT5 | 1)
+	#define LED1_ON DIGITALOFF
 #endif
 
 #ifdef LED2
-	#define LED2_OUTPUT	(DIGITALPORT0 | 4)
-	#define LED2_ON DIGITALON
+	#define LED2_OUTPUT (DIGITALPORT0 | 4)
+	#define LED2_ON DIGITALOFF
 #endif
 
 #ifdef LED3
-	#define LED3_OUTPUT LED1_OUTPUT
-	#define LED3_ON LED1_ON
+	#define LED3_OUTPUT (DIGITALPORT2 | 6)
+	#define LED3_ON DIGITALOFF
 #endif
 
 #ifdef LED4
-	#define LED4_OUTPUT	LED2_OUTPUT
-	#define LED4_ON LED2_ON
-#endif
-
-#ifdef LED5
-	#define LED5_OUTPUT	(DIGITALPORT5 | 0)
-	#define LED5_ON DIGITALON
-#endif
-
-#ifdef LED6
-	#define LED6_OUTPUT (DIGITALPORT2 | 6)
-	#define LED6_ON DIGITALON
+	#define LED4_OUTPUT	(DIGITALPORT5 | 0)
+	#define LED4_ON DIGITALOFF
 #endif
 
 #define DEBUGPORT 6
@@ -162,24 +150,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endif
 
 #ifdef LED3
-	#define LED3_OUTPUT LED1_OUTPUT
-	#define LED3_ON LED1_ON
+	#define LED3_OUTPUT	(DIGITALPORT5 | 2)
+	#define LED3_ON DIGITALON
 #endif
 
 #ifdef LED4
-	#define LED4_OUTPUT	LED2_OUTPUT
-	#define LED4_ON LED2_ON
+	#define LED4_OUTPUT (DIGITALPORT2 | 6)
+	#define LED4_ON DIGITALON
 #endif
-
-#ifdef LED5
-	#define LED5_OUTPUT	(DIGITALPORT5 | 2)
-	#define LED5_ON DIGITALON
-#endif
-
-#ifdef LED6
-	#define LED6_OUTPUT (DIGITALPORT2 | 6)
-	#define LED6_ON DIGITALON
-#endif
+#define DEBUGPORT 6
 // end of Hubsan X4 defs
 
 // ======================================================= WLT V202 ===============================================================

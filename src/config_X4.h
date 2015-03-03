@@ -132,7 +132,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // Define low and high values for stick commands
 #if CONTROL_BOARD_TYPE == CONTROL_BOARD_HUBSAN_Q4
-#define STICK_RANGE_LOW 1150
+#define STICK_RANGE_LOW 1300
 #define STICK_RANGE_HIGH 1700
 #elif CONTROL_BOARD_TYPE == CONTROL_BOARD_HUBSAN_H107L
 #define STICK_RANGE_LOW 1150
@@ -179,7 +179,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // The first step is to isolate the control board from the frame of the aircraft (google Sorbothane).  If all else fails,
 // increase the GYRO_LOW_PASS_FILTER from 0 through 10.  The lowest value that works correctly is the one you should use.
 // Leave comment to use the default value.
-#define GYRO_LOW_PASS_FILTER 3 // 3 = 42Hz (mpu3050)
+#define GYRO_LOW_PASS_FILTER 1 // 3 = 42Hz (mpu3050)
 
 #define UNCRAHSABLE_MAX_ALTITUDE_OFFSET 30.0    // 30 meters above where uncrashability was enabled
 #define UNCRAHSABLE_RADIUS 50.0 // 50 meter radius
@@ -225,8 +225,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // This factor converts ADC voltage to battery voltage.
 // Inverse of voltage divider for battery voltage measurement.
-// On this board the voltage divider consists of two 10kOhm resistors.
+#if CONTROL_BOARD_TYPE == CONTROL_BOARD_HUBSAN_Q4
+// Q4 has a gnd->3.8k->ADC->4.8k->VBAT divider
+#define BATTERY_VOLTAGE_FACTOR 2.24
+#elif CONTROL_BOARD_TYPE == CONTROL_BOARD_HUBSAN_H107L
+// H107L has a gnd->10k->ADC->10k->VBAT divider
 #define BATTERY_VOLTAGE_FACTOR 2.0
+#endif
 
 // If battery voltage is below this value,
 // the pilot will be warned by blinking the LEDs.
@@ -248,8 +253,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define LED2 LED2_STATE 		//0x02
 #define LED3 LED3_STATE 	//0x04
 #define LED4 LED4_STATE	//0x08
-#define LED5 LED5_STATE	//0x10
-#define LED6 LED6_STATE	//0x20
+// #define LED5 LED5_STATE	//0x10
+// #define LED6 LED6_STATE	//0x20
 // #define LED7 LED7_STATE  //0x40
 // #define LED8 LED8_STATE	//0x80
 
@@ -264,19 +269,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // set default PID settings
 #if CONTROL_BOARD_TYPE == CONTROL_BOARD_HUBSAN_Q4
 // pitch PIDs
-#define USERSETTINGS_PID_PGAIN_PITCHINDEX PID_TO_CONFIGURATORVALUE_P(3.5)
-#define USERSETTINGS_PID_IGAIN_PITCHINDEX PID_TO_CONFIGURATORVALUE_I(0.004)
-#define USERSETTINGS_PID_DGAIN_PITCHINDEX PID_TO_CONFIGURATORVALUE_D(22.0)
+#define USERSETTINGS_PID_PGAIN_PITCHINDEX PID_TO_CONFIGURATORVALUE_P(2.075)
+#define USERSETTINGS_PID_IGAIN_PITCHINDEX PID_TO_CONFIGURATORVALUE_I(0.050)
+#define USERSETTINGS_PID_DGAIN_PITCHINDEX PID_TO_CONFIGURATORVALUE_D(18.00)
  
 // roll PIDs
-#define USERSETTINGS_PID_PGAIN_ROLLINDEX PID_TO_CONFIGURATORVALUE_P(3.5)
-#define USERSETTINGS_PID_IGAIN_ROLLINDEX PID_TO_CONFIGURATORVALUE_I(0.004)
-#define USERSETTINGS_PID_DGAIN_ROLLINDEX PID_TO_CONFIGURATORVALUE_D(22.0)
+#define USERSETTINGS_PID_PGAIN_ROLLINDEX PID_TO_CONFIGURATORVALUE_P(1.7)
+#define USERSETTINGS_PID_IGAIN_ROLLINDEX PID_TO_CONFIGURATORVALUE_I(0.050)
+#define USERSETTINGS_PID_DGAIN_ROLLINDEX PID_TO_CONFIGURATORVALUE_D(18.00)
 
 // yaw PIDs
-#define USERSETTINGS_PID_PGAIN_YAWINDEX PID_TO_CONFIGURATORVALUE_P(10.0)
-#define USERSETTINGS_PID_IGAIN_YAWINDEX PID_TO_CONFIGURATORVALUE_I(0.000)
-#define USERSETTINGS_PID_DGAIN_YAWINDEX PID_TO_CONFIGURATORVALUE_D(22.0)
+#define USERSETTINGS_PID_PGAIN_YAWINDEX PID_TO_CONFIGURATORVALUE_P(9.0)
+#define USERSETTINGS_PID_IGAIN_YAWINDEX PID_TO_CONFIGURATORVALUE_I(0.015)
+#define USERSETTINGS_PID_DGAIN_YAWINDEX PID_TO_CONFIGURATORVALUE_D(8.50)
 
 //
 #define USERSETTINGS_PID_PGAIN_ALTITUDEINDEX 27L << 7;   						// 2.7 on configurator
@@ -323,6 +328,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // #define USERSETTINGS_CHECKBOXUNCRASHABLE
 // #define USERSETTINGS_CHECKBOXHEADFREE
 // #define USERSETTINGS_CHECKBOXYAWHOLD
+#define EEPROM_SIZE 512
 
 #elif CONTROL_BOARD_TYPE == CONTROL_BOARD_HUBSAN_H107L
 // #define USERSETTINGS_CHECKBOXARM CHECKBOXMASKAUX1HIGH
