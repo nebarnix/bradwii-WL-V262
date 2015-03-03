@@ -299,9 +299,9 @@ void evaluatecommand(char portnumber, unsigned char *data)
 #if (BATTERY_ADC_CHANNEL != NO_ADC)
     } else if (command == MSP_BAT) { // Send Battery Voltage
 			sendgoodheader(portnumber, 1);
-		#warning "Fixed value for testing!"	
-		sendandchecksumcharacter(portnumber, 40);	
-		// sendandchecksumcharacter(portnumber, global.batteryvoltage);
+//		#warning "Fixed value for testing!"	
+//		sendandchecksumcharacter(portnumber, 40);	
+		 sendandchecksumcharacter(portnumber, lib_fp_multiply(global.batteryvoltage, 10) );
 #endif
 		}
 			else                        // we don't know this command
@@ -427,14 +427,15 @@ void serialprintnumber(char portnumber, long num, int digits, int decimals, char
     char stg[12];
     char *ptr;
     int x;
+
     ptr = stg + 11;
-    char sign;
+
     *ptr = '\0';
     if (num < 0) {
         num = -num;
-        sign = '-';
+        *(--ptr) = '-';
     } else
-        sign = ' ';
+        *(--ptr) = ' ';
 
     for (x = 1; x <= digits; ++x) {
         if (num == 0)
@@ -446,7 +447,6 @@ void serialprintnumber(char portnumber, long num, int digits, int decimals, char
         if (x == decimals)
             *(--ptr) = '.';
     }
-    *(--ptr) = sign;
     lib_serial_sendstring(portnumber, ptr);
 }
 

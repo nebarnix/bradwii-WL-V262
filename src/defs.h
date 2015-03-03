@@ -164,6 +164,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ======================================================= WLT V202 ===============================================================
 #elif CONTROL_BOARD_TYPE == CONTROL_BOARD_WLT_V202
 
+#define EEPROM_SIZE 0x200
+
 #define GYRO_TYPE MPU6050       // gyro
 #define GYRO_ORIENTATION(VALUES,X, Y, Z) {VALUES[ROLLINDEX] =  -X; VALUES[PITCHINDEX] = Y; VALUES[YAWINDEX] = Z;}
 
@@ -207,6 +209,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	#define LED1_ON DIGITALON
 	#endif
 #endif
+#ifdef LED2
+	#define LED2_OUTPUT (DIGITALPORT5 | 2)
+	#ifndef LED2_ON
+	#define LED2_ON DIGITALON
+	#endif
+#endif
+
 
 // ======================================================= JXD 385 ===============================================================
 #elif CONTROL_BOARD_TYPE == CONTROL_BOARD_JXD_JD385

@@ -173,10 +173,10 @@ int main(void)
     
     // try to load usersettings from eeprom
     readusersettingsfromeeprom();
-lib_serial_sendstring(DEBUGPORT, "LOAD_EEP\n");
+//lib_serial_sendstring(DEBUGPORT, "LOAD_EEP\n");
 
     if(!global.usersettingsfromeeprom) {
-lib_serial_sendstring(DEBUGPORT, "BLANK_EEP\n");
+//lib_serial_sendstring(DEBUGPORT, "BLANK_EEP\n");
 			// If nothing found in EEPROM (= data flash on Mini51)
 			// use default settings.
 			// start with default user settings in case there's nothing in eeprom
@@ -281,7 +281,7 @@ lib_serial_sendstring(DEBUGPORT, "\n");
     //lib_adc_select_channel(adc_bat_channel);
 		lib_adc_select_channel(BATTERY_ADC_CHANNEL);
     lib_adc_startconv();
-		#if (BATTERY_ADC_DEBUG)
+#if (BATTERY_ADC_DEBUG)
 		while(lib_adc_is_busy()){
 		}
 		batteryvoltageraw = lib_adc_read_raw();
@@ -431,12 +431,12 @@ lib_serial_sendstring(DEBUGPORT, "\n");
         if (global.activecheckboxitems & CHECKBOXMASKAUTOTUNE) {
             if (!(global.previousactivecheckboxitems & CHECKBOXMASKAUTOTUNE)) {
                 autotune(angleerror, AUTOTUNESTARTING); // tell autotune that we just started autotuning
-			lib_serial_sendstring(DEBUGPORT, "AT START\n");
+			//lib_serial_sendstring(DEBUGPORT, "AT START\n");
 		}
             else
                 autotune(angleerror, AUTOTUNETUNING);   // tell autotune that we are in the middle of autotuning
         } else if (global.previousactivecheckboxitems & CHECKBOXMASKAUTOTUNE) {
-			lib_serial_sendstring(DEBUGPORT, "AT STOP\n");
+			//lib_serial_sendstring(DEBUGPORT, "AT STOP\n");
             autotune(angleerror, AUTOTUNESTOPPING);     // tell autotune that we just stopped autotuning
 	}
 #endif
@@ -745,139 +745,40 @@ void defaultusersettings(void)
     global.usersettingsfromeeprom = 0;  // this should get set to one if we read from eeprom
 
     // set default acro mode rotation rates
-#ifdef USERSETTINGS_MAXYAWRATE
-    usersettings.maxyawrate = USERSETTINGS_MAXYAWRATE;  // degrees per second    
-#else
-		usersettings.maxyawrate = 600L << FIXEDPOINTSHIFT;  // degrees per second   
-#endif
-#ifdef USERSETTINGS_MAXPITCHANDROLLRATE	
-    usersettings.maxpitchandrollrate = USERSETTINGS_MAXPITCHANDROLLRATE; // degrees per second
-#else
-		usersettings.maxpitchandrollrate = 400L << FIXEDPOINTSHIFT; // degrees per second
-#endif
+    usersettings.maxyawrate = 400L << FIXEDPOINTSHIFT;  // degrees per second
+    usersettings.maxpitchandrollrate = 400L << FIXEDPOINTSHIFT; // degrees per second
 
     // set default PID settings
-		for (int x = 0; x < 3; ++x) {
-        usersettings.pid_pgain[x] = PID_TO_CONFIGURATORVALUE_P(1.5); 		//1.5 on configurator
-        usersettings.pid_igain[x] = PID_TO_CONFIGURATORVALUE_I(0.008); 	//.008 on configurator
-        usersettings.pid_dgain[x] = PID_TO_CONFIGURATORVALUE_D(8.0); 		//8 on configurator        
+    for (int x = 0; x < 3; ++x) {
+        usersettings.pid_pgain[x] = 15L << 3;   // 1.5 on configurator
+        usersettings.pid_igain[x] = 8L; // .008 on configurator
+        usersettings.pid_dgain[x] = 8L << 2;    // 8 on configurator
     }
 
-		// pitch PIDs
-#ifdef USERSETTINGS_PID_PGAIN_PITCHINDEX
-    usersettings.pid_pgain[PITCHINDEX] = USERSETTINGS_PID_PGAIN_PITCHINDEX;
-#endif
-#ifdef USERSETTINGS_PID_IGAIN_PITCHINDEX
-    usersettings.pid_igain[PITCHINDEX] = USERSETTINGS_PID_IGAIN_PITCHINDEX;
-#endif
-#ifdef USERSETTINGS_PID_DGAIN_PITCHINDEX
-    usersettings.pid_dgain[PITCHINDEX] = USERSETTINGS_PID_DGAIN_PITCHINDEX;
-#endif
-		
- // roll PIDs
-#ifdef USERSETTINGS_PID_PGAIN_ROLLINDEX		
-    usersettings.pid_pgain[ROLLINDEX] = USERSETTINGS_PID_PGAIN_ROLLINDEX;
-#endif
-#ifdef USERSETTINGS_PID_IGAIN_ROLLINDEX
-    usersettings.pid_igain[ROLLINDEX] = USERSETTINGS_PID_IGAIN_ROLLINDEX;
-#endif
-#ifdef USERSETTINGS_PID_DGAIN_ROLLINDEX
-    usersettings.pid_dgain[ROLLINDEX] = USERSETTINGS_PID_DGAIN_ROLLINDEX;	
-#endif
-	
-	
-    // yaw PIDs
-#ifdef USERSETTINGS_PID_PGAIN_YAWINDEX
-    usersettings.pid_pgain[YAWINDEX] = USERSETTINGS_PID_PGAIN_YAWINDEX;
-#endif
-#ifdef USERSETTINGS_PID_IGAIN_YAWINDEX 
-    usersettings.pid_igain[YAWINDEX] = USERSETTINGS_PID_IGAIN_YAWINDEX;
-#endif
-#ifdef USERSETTINGS_PID_DGAIN_YAWINDEX
-    usersettings.pid_dgain[YAWINDEX] = USERSETTINGS_PID_DGAIN_YAWINDEX;	
-#endif
+    usersettings.pid_pgain[YAWINDEX] = 30L << 3;        // 3 on configurator
 
-		for (int x = 3; x < NUMPIDITEMS; ++x) {
+    for (int x = 3; x < NUMPIDITEMS; ++x) {
         usersettings.pid_pgain[x] = 0;
         usersettings.pid_igain[x] = 0;
         usersettings.pid_dgain[x] = 0;
     }
 
+    usersettings.pid_pgain[ALTITUDEINDEX] = 27L << 7;   // 2.7 on configurator
+    usersettings.pid_dgain[ALTITUDEINDEX] = 6L << 9;    // 6 on configurator
 
-#ifdef USERSETTINGS_PID_PGAIN_ALTITUDEINDEX		
-    usersettings.pid_pgain[ALTITUDEINDEX] = USERSETTINGS_PID_PGAIN_ALTITUDEINDEX;
-#else
-		usersettings.pid_pgain[ALTITUDEINDEX] = PID_TO_CONFIGURATORVALUE_ALT_P(2.7) // 2.7 on configurator
-#endif
-		
-#ifdef USERSETTINGS_PID_DGAIN_ALTITUDEINDEX		
-    usersettings.pid_dgain[ALTITUDEINDEX] = USERSETTINGS_PID_DGAIN_ALTITUDEINDEX;    		
-#else
-		usersettings.pid_dgain[ALTITUDEINDEX] = PID_TO_CONFIGURATORVALUE_ALT_D(6.0) // 6 on configurator
-#endif
-
-#ifdef USERSETTINGS_PID_PGAIN_NAVIGATIONINDEX
-    usersettings.pid_pgain[NAVIGATIONINDEX] = USERSETTINGS_PID_PGAIN_NAVIGATIONINDEX;   
-#else
-		usersettings.pid_pgain[NAVIGATIONINDEX] = PID_TO_CONFIGURATORVALUE_NAV_P(2.5) // 2.5 on configurator
-#endif
-		
-#ifdef USERSETTINGS_PID_DGAIN_NAVIGATIONINDEX	
-    usersettings.pid_dgain[NAVIGATIONINDEX] = USERSETTINGS_PID_DGAIN_NAVIGATIONINDEX;   
-#else
-	usersettings.pid_dgain[NAVIGATIONINDEX] = PID_TO_CONFIGURATORVALUE_NAV_D(0.188); // .188 on configurator
-#endif
-
+    usersettings.pid_pgain[NAVIGATIONINDEX] = 25L << 11;        // 2.5 on configurator
+    usersettings.pid_dgain[NAVIGATIONINDEX] = 188L << 8;        // .188 on configurator
 
     // set default configuration checkbox settings.
     for (int x = 0; x < NUMPOSSIBLECHECKBOXES; ++x) {
         usersettings.checkboxconfiguration[x] = 0;
     }
-
-#ifdef USERSETTINGS_CHECKBOXARM
-  usersettings.checkboxconfiguration[CHECKBOXARM] = USERSETTINGS_CHECKBOXARM;
-#endif
-#ifdef USERSETTINGS_CHECKBOXAUTOTHROTTLE
-  usersettings.checkboxconfiguration[CHECKBOXAUTOTHROTTLE] = USERSETTINGS_CHECKBOXAUTOTHROTTLE;		
-#endif
-#ifdef USERSETTINGS_CHECKBOXALTHOLD
-  usersettings.checkboxconfiguration[CHECKBOXALTHOLD] = USERSETTINGS_CHECKBOXALTHOLD;		
-#endif
-#ifdef USERSETTINGS_CHECKBOXCOMPASS
-  usersettings.checkboxconfiguration[CHECKBOXCOMPASS] = USERSETTINGS_CHECKBOXCOMPASS;		
-#endif		
-#ifdef USERSETTINGS_CHECKBOXPOSITIONHOLD
-  usersettings.checkboxconfiguration[CHECKBOXPOSITIONHOLD] = USERSETTINGS_CHECKBOXPOSITIONHOLD;		
-#endif
-#ifdef USERSETTINGS_CHECKBOXRETURNTOHOME
-	  usersettings.checkboxconfiguration[CHECKBOXRETURNTOHOME] = USERSETTINGS_CHECKBOXRETURNTOHOME;	
-#endif
-#ifdef USERSETTINGS_CHECKBOXSEMIACRO
-  usersettings.checkboxconfiguration[CHECKBOXSEMIACRO] = USERSETTINGS_CHECKBOXSEMIACRO;		
-#endif
-#ifdef USERSETTINGS_CHECKBOXFULLACRO
-  usersettings.checkboxconfiguration[CHECKBOXFULLACRO] = USERSETTINGS_CHECKBOXFULLACRO;		
-#endif
-#ifdef USERSETTINGS_CHECKBOXHIGHRATES
-	  usersettings.checkboxconfiguration[CHECKBOXHIGHRATES] = USERSETTINGS_CHECKBOXHIGHRATES;	
-#endif
-#ifdef USERSETTINGS_CHECKBOXHIGHANGLE
-		usersettings.checkboxconfiguration[CHECKBOXHIGHANGLE] = USERSETTINGS_CHECKBOXHIGHANGLE;		
-#endif
-#ifdef USERSETTINGS_CHECKBOXAUTOTUNE
-	  usersettings.checkboxconfiguration[CHECKBOXAUTOTUNE] = USERSETTINGS_CHECKBOXAUTOTUNE;	
-#endif
-#ifdef USERSETTINGS_CHECKBOXUNCRASHABLE
-	  usersettings.checkboxconfiguration[CHECKBOXUNCRASHABLE] = USERSETTINGS_CHECKBOXUNCRASHABLE;	
-#endif
-#ifdef USERSETTINGS_CHECKBOXHEADFREE
-  usersettings.checkboxconfiguration[CHECKBOXHEADFREE] = USERSETTINGS_CHECKBOXHEADFREE;		
-#endif
-#ifdef USERSETTINGS_CHECKBOXYAWHOLD
-	  usersettings.checkboxconfiguration[CHECKBOXYAWHOLD] = USERSETTINGS_CHECKBOXYAWHOLD;	
-#endif
-
-	// reset the calibration settings
+//   usersettings.checkboxconfiguration[CHECKBOXARM]=CHECKBOXMASKAUX1HIGH;
+    usersettings.checkboxconfiguration[CHECKBOXHIGHANGLE] = CHECKBOXMASKAUX1LOW;
+    usersettings.checkboxconfiguration[CHECKBOXSEMIACRO] = CHECKBOXMASKAUX1HIGH;
+    usersettings.checkboxconfiguration[CHECKBOXHIGHRATES] = CHECKBOXMASKAUX1HIGH;
+	
+		// reset the calibration settings
     for (int x = 0; x < 3; ++x) {
         usersettings.compasszerooffset[x] = 0;
         usersettings.compasscalibrationmultiplier[x] = 1L << FIXEDPOINTSHIFT;
