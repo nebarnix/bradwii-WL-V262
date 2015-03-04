@@ -1,4 +1,4 @@
-For Mini54ZDE flashtools see https://github.com/veloeb/SWD-Hacking
+Mini54ZDE flashtools are at https://github.com/veloeb/SWD-Hacking
 =======
 
 
