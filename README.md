@@ -1,3 +1,7 @@
+For Mini54ZDE flashtools see https://github.com/veloeb/SWD-Hacking
+=======
+
+
 Bradwii for JXD JD385, WLToys V202, Hubsan H107L and clones
 =======
 
