@@ -1,3 +1,6 @@
+NOTES:
+
+
 Mini54ZDE flashtools are at https://github.com/veloeb/SWD-Hacking
 =======
 
@@ -81,7 +84,7 @@ Otherwise the firmware will continue to use the old data.
 
 Credits
 ======
-
+ * Anton Zolotukhin made some updates to lights and such for the V666 https://github.com/antonzolotukhin/bradwii-WL666
  * Bradwii was originally coded by Brad Quick for AVR: https://github.com/bradquick/bradwii
  * Trollcop forked and ported to ARM STM32, untested: https://github.com/trollcop/bradwii
  * The Mini54ZAN ARM port to V202/JD385 was done by Victor: https://github.com/victzh/bradwii
