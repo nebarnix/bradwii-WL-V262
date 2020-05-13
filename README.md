@@ -1,7 +1,7 @@
 **NEBARNIX NOTES FOR V262 UPDATES:**
 * Incorporated of stock controller trim packets which were previously ignored
 * Adjustable yaw stick position for arm and disarm as stock controller 40% default control mode cannot reach FPSTICK_HIGH and LOW
-* * Adjust ARM_RANGE_LOW and ARM_RANGE_HIGH (which feed two new definitions for FPARM_YAW_STICKLOW and FPARM_YAW_STICKHIGH
+ * Adjust ARM_RANGE_LOW and ARM_RANGE_HIGH (which feed two new definitions for FPARM_YAW_STICKLOW and FPARM_YAW_STICKHIGH
 * Commented out config for compass that V262 does not have. 
 * Changed serial baud rate back to 115200 (assume it was set low for some wireless UART)
 
