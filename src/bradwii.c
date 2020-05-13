@@ -749,6 +749,7 @@ void defaultusersettings(void)
     usersettings.maxpitchandrollrate = 400L << FIXEDPOINTSHIFT; // degrees per second
 
     // set default PID settings
+	/*
     for (int x = 0; x < 3; ++x) {
         usersettings.pid_pgain[x] = 15L << 3;   // 1.5 on configurator
         usersettings.pid_igain[x] = 8L; // .008 on configurator
@@ -756,8 +757,19 @@ void defaultusersettings(void)
     }
 
     usersettings.pid_pgain[YAWINDEX] = 30L << 3;        // 3 on configurator
+    */
+	  
+	  // set default PID settings for V262
+    for (int x = 0; x < 3; ++x) {
+        usersettings.pid_pgain[x] = 38L << 3;   // 1.5 on configurator
+        usersettings.pid_igain[x] = 30L; // .008 on configurator
+        usersettings.pid_dgain[x] = 21L << 2;    // 8 on configurator
+    }
 
-    for (int x = 3; x < NUMPIDITEMS; ++x) {
+    usersettings.pid_pgain[YAWINDEX] = 76L << 3;        // 3 on configurator
+		
+    //init everything else to zeo (why not just do this first?)
+		for (int x = 3; x < NUMPIDITEMS; ++x) { 
         usersettings.pid_pgain[x] = 0;
         usersettings.pid_igain[x] = 0;
         usersettings.pid_dgain[x] = 0;
@@ -774,9 +786,9 @@ void defaultusersettings(void)
         usersettings.checkboxconfiguration[x] = 0;
     }
 //   usersettings.checkboxconfiguration[CHECKBOXARM]=CHECKBOXMASKAUX1HIGH;
-    usersettings.checkboxconfiguration[CHECKBOXHIGHANGLE] = CHECKBOXMASKAUX1LOW;
-    usersettings.checkboxconfiguration[CHECKBOXSEMIACRO] = CHECKBOXMASKAUX1HIGH;
-    usersettings.checkboxconfiguration[CHECKBOXHIGHRATES] = CHECKBOXMASKAUX1HIGH;
+    //usersettings.checkboxconfiguration[CHECKBOXHIGHANGLE] = CHECKBOXMASKAUX1LOW;
+    //usersettings.checkboxconfiguration[CHECKBOXSEMIACRO] = CHECKBOXMASKAUX1HIGH;
+    //usersettings.checkboxconfiguration[CHECKBOXHIGHRATES] = CHECKBOXMASKAUX1HIGH;
 	
 		// reset the calibration settings
     for (int x = 0; x < 3; ++x) {

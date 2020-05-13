@@ -308,11 +308,25 @@ static bool decode_packet(uint8_t *packet, uint16_t *data)
         // TREA order in packet to MultiWii order is handled by
         // correct assignment to channelindex
         // Throttle 0..255 to 1000..2000
-        data[v2x2_channelindex[0]] = ((uint16_t)packet[0]) * 1000 / 255 + 1000;
+        //trim packets range from 0x02 to 0x7E with 0x40 as center (2-126, center at 64) and a step size of 2. We should apply them as 
+				data[v2x2_channelindex[0]] = ((uint16_t)packet[0]) * 1000 / 255 + 1000; //throttle trim is applied at the transmitter, no need to trim
         for (int i = 1; i < 4; ++i) {
-            uint8_t a = packet[i];
-            data[v2x2_channelindex[i]] = ((uint16_t)(a < 0x80 ? 0x7f - a : a)) * 1000 / 255 + 1000;
+            uint8_t a = packet[i]; //yaw, pitch, roll
+					  uint8_t t = packet[i+3]; //yawtrim, pitchtrim, rolltrim
+					  //a = a + t>>1 - 0x40>>1;
+//					  if((int16_t)(a) + (int16_t)(t) - 0x40 < 0) //check if trim will cause underflow, clip to 0 if so/
+//							a = 0;
+//						else if((int16_t)(a) + (int16_t)(t) - 0x40 > 255) //check if trim will cause overflow, clip to 0 if so
+//							a = 255;
+//						else
+//							a = 0;
+            data[v2x2_channelindex[i]] = ((uint16_t)(a < 0x80 ? 0x7f - a : a)) * 1000 / 255 + 1000; //BTW (a < 0x80 ? 0x7f - a : a)) maps 0-255 to 127-255
+					  //2/255 ~ 0.8%, which is 8/1000 after mapping. To turn (step size of 2) to (step size of 8) multiply by 4  
+					  data[v2x2_channelindex[i]] += (t-0x40)*1; //apply trim. 4 turned out to be too much trim, so reducing to native *1
+					
         }
+        //packet[4] packet[5] packet[6] are TRIMS and don't seem to be implemented in BradWii (likely because noone uses stock controller)
+				
         uint8_t flags[] = {V2X2_FLAG_LED, V2X2_FLAG_FLIP, V2X2_FLAG_CAMERA, V2X2_FLAG_VIDEO}; // two more unknown bits
         for (int i = 4; i < 8; ++i) {
             data[v2x2_channelindex[i]] = 1000 + ((packet[14] & flags[i-4]) ? 1000 : 0);

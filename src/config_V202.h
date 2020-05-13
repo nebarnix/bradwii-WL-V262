@@ -60,6 +60,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define STICK_ARM STICK_COMMAND_YAW_HIGH
 #define STICK_DISARM STICK_COMMAND_YAW_LOW
 
+//set the following to the YAW value you want to use for arming and disarming (stock controller 40% default doesnt' trip the stick range defaults for high and low)
+#define ARM_RANGE_LOW 1350 
+#define ARM_RANGE_HIGH 1650
+
+#define FPARM_YAW_STICKLOW (((fixedpointnum)ARM_RANGE_LOW-1500)<<7)
+#define FPARM_YAW_STICKHIGH (((fixedpointnum)ARM_RANGE_HIGH-1500)<<7)
+
+
+
 // uncomment the following two lines to allow arming using yaw, roll, and pitch all at once
 //#define STICK_ARM STICK_COMMAND_YAW_HIGH+STICK_COMMAND_ROLL_HIGH+STICK_COMMAND_PITCH_LOW
 //#define STICK_DISARM STICK_COMMAND_YAW_LOW+STICK_COMMAND_ROLL_LOW+STICK_COMMAND_PITCH_LOW
@@ -77,8 +86,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //#define MULTIWII_CONFIG_SERIAL_PORTS SERIALPORT1
 //#define MULTIWII_CONFIG_SERIAL_PORTS SERIALPORT1+SERIALPORT3
 
-#define SERIAL_0_BAUD 19200 // to get APC220 work.
-//#define SERIAL_0_BAUD 115200
+//#define SERIAL_0_BAUD 19200 // to get APC220 work.
+#define SERIAL_0_BAUD 115200
 //#define SERIAL_1_BAUD 9600
 //#define SERIAL_2_BAUD 9600
 //#define SERIAL_3_BAUD 115200
@@ -127,11 +136,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 // V666 Compass
-#define COMPASS_TYPE HMC5883
-#define COMPASS_ORIENTATION(VALUES,X, Y, Z)  {VALUES[ROLLINDEX]  =  X; VALUES[PITCHINDEX]  = Y; VALUES[YAWINDEX]  = Z;}
+//#define COMPASS_TYPE HMC5883
+//#define COMPASS_ORIENTATION(VALUES,X, Y, Z)  {VALUES[ROLLINDEX]  =  X; VALUES[PITCHINDEX]  = Y; VALUES[YAWINDEX]  = Z;}
 
 // un-comment if you don't want to include code for a compass, otherwise it will default to what the control board has on it
-//#define COMPASS_TYPE NO_COMPASS
+#define COMPASS_TYPE NO_COMPASS
 //#define COMPASS_TYPE HMC5883
 //#define COMPASS_TYPE HMC5843
 //#define COMPASS_TYPE MAG3110
